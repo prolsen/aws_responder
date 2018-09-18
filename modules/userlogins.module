@@ -1,0 +1,6 @@
+[Documentation]
+Module = userlogins
+Author = Patrick Olsen
+Version = 0.1
+Date = 2018-09-13
+Description = Lists the user logins. Includes username, userid, created date and password last used date.
