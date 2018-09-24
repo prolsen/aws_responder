@@ -47,6 +47,7 @@ if __name__ == "__main__":
     
     module_name = args.module
     module_path = os.path.join(os.getcwd(), "modules")
+    module_values = args.values
 
     airk = AIRKModuleManager(module_name, module_path)
 
@@ -63,7 +64,7 @@ if __name__ == "__main__":
             print(e)
             exit(0)
     
-        print(module.Module(values).execute())
+        print(module.Module(module_values).execute())
         
     else:
         print("Nothing to do. Specify a module action.")

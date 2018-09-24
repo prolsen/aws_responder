@@ -1,0 +1,6 @@
+[Documentation]
+Module = disableaccesskey
+Author = Patrick Olsen
+Version = 0.1
+Date = 2018-09-24
+Description = Disable an access key that's supplied with --values.

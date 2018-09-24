@@ -4,8 +4,8 @@ from Utils.Helpers import Utilities
 
 class Module(object):
 
-    def __init__(self, values):
-        self.values = values
+    def __init__(self, module_values):
+        self.module_values = module_values
 
     def execute(self):
         '''
