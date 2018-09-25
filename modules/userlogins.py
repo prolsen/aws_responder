@@ -18,7 +18,7 @@ class Module(object):
 
         encode_date = Utilities().encode_date
 
-        userDict = []
+        userList = []
         
         for user in response['Users']:
             username = user['UserName']
@@ -33,6 +33,6 @@ class Module(object):
             users = dict(UserName=username, UserId=user_id, CreateDate=ctime, \
                         PasswordLastUsed=pass_last_used)
 
-            userDict.append(users)
+            userList.append(users)
 
-        return(json.dumps(userDict, indent=4))
+        return(json.dumps(userList, indent=4))

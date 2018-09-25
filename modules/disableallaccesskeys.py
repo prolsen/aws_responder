@@ -8,16 +8,28 @@ class Module(object):
     def __init__(self, module_values):
         self.module_values = module_values
 
-    def inactivate(self, iam, username, accesskeyid):
+    def inactivate(self, iam, accesskeyDict):
         '''
         Inactivate the access keys.
         '''
-        iam.update_access_key(
-            UserName=username,
-            AccessKeyId=accesskeyid,
-            Status='Inactive'
-        )
-        print('Successfully inactivated {0},{1}'.format(username, accesskeyid))
+        userList = []
+
+        for k,v in accesskeyDict.items():
+            accesskeyid = k
+            username = v
+
+            iam.update_access_key(
+                UserName=username,
+                AccessKeyId=accesskeyid,
+                Status='Inactive'
+            )
+
+            users = dict(UserName=username, AccessKeyId=accesskeyid, Result="Successful")
+
+            userList.append(users)
+
+        return(json.dumps(userList, indent=4))
+        
 
     def execute(self):
         '''
@@ -29,6 +41,8 @@ class Module(object):
         '''
 
         iam = boto3.client('iam')
+
+        accesskeyDict = {}
 
         for username in self.module_values:
             paginator = iam.get_paginator('list_access_keys')
@@ -45,5 +59,7 @@ class Module(object):
                     if keyid['Status'] == 'Active':
                         username = keyid['UserName']
                         accesskeyid = keyid['AccessKeyId']
-                    
-                        self.inactivate(iam, username, accesskeyid)
+                        
+                        accesskeyDict[accesskeyid] = username
+        
+        return(self.inactivate(iam, accesskeyDict))
