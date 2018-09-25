@@ -1,0 +1,6 @@
+[Documentation]
+Module = disableallaccesskeys
+Author = Patrick Olsen
+Version = 0.1
+Date = 2018-09-25
+Description = Disable all access key for a user(s) that's supplied via the --values.

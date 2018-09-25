@@ -9,13 +9,12 @@ class Module(object):
 
     def execute(self):
         '''
-        List the IAM users and then return their
-        UserId, Creation date, and last time the users
-        used their passwords. Null if never.
+        Makes the access key id provided inactive.
         '''
     
         if len(self.module_values[0]) == 20:
             iam = boto3.client('iam')
+
             response = iam.update_access_key(
                 AccessKeyId=self.module_values[0],
                 Status='Inactive'
