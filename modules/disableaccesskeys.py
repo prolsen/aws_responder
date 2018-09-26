@@ -5,10 +5,12 @@ from botocore.exceptions import ClientError
 
 class Module(object):
 
-    def __init__(self, module_values):
-        self.module_values = module_values
+    def __init__(self, dryrun, instanceids, sgids, vpcids, usernames, \
+                            accesskeyids, values):
+        self.usernames = usernames
+        self.dryrun = dryrun
 
-    def inactivate(self, iam, accesskeyDict):
+    def inactivate(self, iam_client, accesskeyDict):
         '''
         Inactivate the access keys.
         '''
@@ -18,7 +20,7 @@ class Module(object):
             accesskeyid = k
             username = v
 
-            iam.update_access_key(
+            iam_client.update_access_key(
                 UserName=username,
                 AccessKeyId=accesskeyid,
                 Status='Inactive'
@@ -27,8 +29,11 @@ class Module(object):
             users = dict(UserName=username, AccessKeyId=accesskeyid, Result="Successful")
 
             userList.append(users)
-
-        return(json.dumps(userList, indent=4))
+        
+        if len(userList) == 0:
+            exit(0)
+        else:
+            return(json.dumps(userList, indent=4))
         
 
     def execute(self):
@@ -40,18 +45,20 @@ class Module(object):
         all of them inactive.
         '''
 
-        iam = boto3.client('iam')
+        iam_client = boto3.client('iam')
+        dryrun = Utilities().str_to_bool(self.dryrun)
 
         accesskeyDict = {}
 
-        for username in self.module_values:
-            paginator = iam.get_paginator('list_access_keys')
+        for username in self.usernames:
+            paginator = iam_client.get_paginator('list_access_keys')
 
             username_info = paginator.paginate(
                 UserName=username
                 )
 
             for result in username_info:
+                #print(result)
                 keys = result['AccessKeyMetadata']
 
                 for keyid in keys:
@@ -61,5 +68,9 @@ class Module(object):
                         accesskeyid = keyid['AccessKeyId']
                         
                         accesskeyDict[accesskeyid] = username
+                    else:
+                        print('{0},{1} is already inactive'.format(keyid['UserName'], \
+                                                                    keyid['AccessKeyId']))
+                        continue
         
-        return(self.inactivate(iam, accesskeyDict))
+        return(self.inactivate(iam_client, accesskeyDict))

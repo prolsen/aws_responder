@@ -1,5 +1,5 @@
 [Documentation]
-Module = disableallaccesskeys
+Module = disableaccesskeys
 Author = Patrick Olsen
 Version = 0.1
 Date = 2018-09-25

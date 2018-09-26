@@ -1,11 +1,13 @@
-import boto3
 import json
+import boto3
 from Utils.Helpers import Utilities
+from botocore.exceptions import ClientError
 
 class Module(object):
 
-    def __init__(self, module_values):
-        self.module_values = module_values
+    def __init__(self, dryrun, instanceid, sgid, vpcid, username, \
+                            accesskeyid, values):
+        pass
 
     def execute(self):
         '''
