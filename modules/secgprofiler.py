@@ -33,6 +33,7 @@ class Module(object):
         dryrun = Utilities().str_to_bool(self.dryrun)
 
         instances = Utilities().yieldInstances(dryrun)
+
         enis = self.yieldENIs(instances)
         ingress_dict = self.enumIngresList(enis)
 
@@ -50,7 +51,6 @@ class Module(object):
                         PrivateIP=e[3], SGId=e[4], FromPort=e[5], \
                         Protocol=e[6], ToPort=e[7], CidrRanges=e[8]
                         )
-            
             sglist.append(sgs)
 
         return(json.dumps(sglist, indent=4))
@@ -108,14 +108,12 @@ class Module(object):
                     public_ip = i['PrivateIpAddresses'][0]['Association']['PublicIp']
                 except KeyError:
                     public_ip = 'No Association'
-                
                 try:
                     private_ip = i['PrivateIpAddresses'][0]['PrivateIpAddress']
                 except KeyError:
                     private_ip = 'No Association'
 
                 sec_groups = [x['GroupId'] for x in i['Groups']]
-
                 eniDict[i['NetworkInterfaceId']] = x['InstanceId'], public_ip, private_ip, sec_groups
         
         return(eniDict)

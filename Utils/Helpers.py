@@ -30,9 +30,15 @@ class Utilities(object):
     def yieldInstances(self, dryrun):
         ec2_client = boto3.client('ec2')
 
-        response = ec2_client.describe_instances(
-            DryRun=dryrun
-        )
+        try:
+            response = ec2_client.describe_instances(
+                DryRun=dryrun
+            )
+
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'DryRunOperation':
+                print(e.response['Error']['Message'])
+                exit(0)
 
         for instances in response['Reservations']:
             for instance in instances['Instances']:

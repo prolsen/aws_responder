@@ -19,8 +19,11 @@ class Module(object):
 
         dryrun = Utilities().str_to_bool(self.dryrun)
 
-        response = ec2_client.describe_instances(
-            DryRun=dryrun
-        )
-
-        instances = Utilities().yieldInstances(response)
+        try:
+            response = ec2_client.describe_instances(
+                DryRun=dryrun
+            )
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'DryRunOperation':
+                print(e.response['Error']['Message'])
+                exit(0)

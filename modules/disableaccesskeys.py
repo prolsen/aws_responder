@@ -26,8 +26,10 @@ class Module(object):
                 Status='Inactive'
             )
 
-            users = dict(UserName=username, AccessKeyId=accesskeyid, Result="Successful")
-
+            users = dict(UserName=username, AccessKeyId=accesskeyid, \
+                    Result="Successful"
+                    )
+            
             userList.append(users)
         
         if len(userList) == 0:
@@ -44,10 +46,8 @@ class Module(object):
         This iterates through their keys and makes
         all of them inactive.
         '''
-
         iam_client = boto3.client('iam')
-        dryrun = Utilities().str_to_bool(self.dryrun)
-
+        #dryrun = Utilities().str_to_bool(self.dryrun)
         accesskeyDict = {}
 
         for username in self.usernames:
