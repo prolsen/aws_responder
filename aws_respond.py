@@ -33,9 +33,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='AWS Incident Response Kit (AIRK).')
     parser.add_argument('--module', required=False, \
                         help='Specify the module (action) you want to run.')
-    parser.add_argument('--listmodules', required=False, \
+    parser.add_argument('--listmodules', required=False, action='store_true', \
                         help='Lists all of the available modules (actions).')
-    parser.add_argument('--moduledetails', required=False, \
+    parser.add_argument('--moduledetails', required=False, action='store_true', \
                         help='Lists descriptions of the available modules.')
     parser.add_argument('--dryrun', required=False, default=False, \
                         help='If you want to run a dryrun first before going live with \
@@ -55,11 +55,10 @@ if __name__ == "__main__":
                         This can be anything.')
 
     args = parser.parse_args()
-
-    values = args.values
-    
+   
     module_name = args.module
     module_path = os.path.join(os.getcwd(), "modules")
+    
     # AWS specific variables.
     dryrun = args.dryrun
     instanceids = args.instanceids
@@ -73,20 +72,19 @@ if __name__ == "__main__":
 
     if args.listmodules:
         airk.listModules()
-    
+   
     elif args.moduledetails:
         airk.detailedModule()
 
     elif args.module is not None:
         try:
             module = airk.load_module()
-        except (ModuleNotFoundError) as e:
+        except ModuleNotFoundError as e:
             print(e)
             exit(0)
     
         print(module.Module(dryrun, instanceids, sgids, vpcids, usernames, \
                             accesskeyids, values).execute())
-        
     else:
         print("Nothing to do. Specify a module action.")
         exit(0)
