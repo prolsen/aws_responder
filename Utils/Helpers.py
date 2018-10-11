@@ -1,3 +1,5 @@
+import boto3
+from botocore.exceptions import ClientError
 from datetime import date, datetime
 
 class Utilities(object):
@@ -24,3 +26,14 @@ class Utilities(object):
         else:
             print('Did you forget to specify the DryRun arguement --dryrun True|False')
             exit(0)
+
+    def yieldInstances(self, dryrun):
+        ec2_client = boto3.client('ec2')
+
+        response = ec2_client.describe_instances(
+            DryRun=dryrun
+        )
+
+        for instances in response['Reservations']:
+            for instance in instances['Instances']:
+                yield(instance)

@@ -12,7 +12,7 @@ class Module(object):
 
     def execute(self):
         '''
-        Undecided.....
+        Not sure what I want to do with this yet.
         '''
 
         ec2_client = boto3.client('ec2')
@@ -23,6 +23,4 @@ class Module(object):
             DryRun=dryrun
         )
 
-        for instances in response['Reservations']:
-            for instance in instances['Instances']:
-                return(instance)
+        instances = Utilities().yieldInstances(response)
